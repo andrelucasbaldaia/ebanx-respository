@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Landscape EBANX - Tema Claro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f2f2f2;
+            --primary-blue: #0051ff;
+            --accent-teal: #008778; /* Tom mais escuro do teal para melhor contraste */
+            --text-dark: #000e2b;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-muted: #666666;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .title-color {
+            color: var(--primary-blue);
+        }
+
+        .header-logo {
+            max-width: 150px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 81, 255, 0.1);
+            border-color: rgba(0, 81, 255, 0.5);
+        }
+
+        .info-grid {
+            flex-grow: 1;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .info-label .icon {
+            margin-right: 0.5rem;
+            color: var(--accent-teal);
+        }
+        
+        .info-value {
+            font-weight: 600;
+            text-align: right;
+            color: var(--text-dark);
+        }
+
+        /* Diagrama Styles */
+        .diagram-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+            padding: 1.25rem 1.75rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            position: relative;
+            min-width: 150px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .diagram-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.5rem;
+            color: var(--accent-teal);
+        }
+        .diagram-arrow svg {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        .diagram-arrow p {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            background-color: var(--bg-light);
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        /* Status Indicators */
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .status-green { background-color: #28a745; } /* Verde mais padrão */
+        .status-yellow { background-color: #FFC107; }
+        .status-blue { background-color: var(--primary-blue); }
+
+
+        /* Swiper Styles Override */
+        .swiper-container {
+            width: 100%;
+            padding-top: 20px;
+            padding-bottom: 50px;
+            /* --- CORREÇÃO APLICADA AQUI --- */
+            overflow: hidden;
+            border-radius: 1.5rem; /* 24px */
+        }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: stretch; /* Garante que os itens tenham a mesma altura */
+        }
+        .swiper-pagination-bullet {
+            background-color: var(--border-color);
+            opacity: 0.9;
+        }
+        .swiper-pagination-bullet-active {
+            background-color: var(--primary-blue) !important;
+            opacity: 1;
+        }
+        .swiper-button-next, .swiper-button-prev {
+            color: var(--primary-blue) !important;
+            transition: transform 0.2s ease;
+        }
+        .swiper-button-next:hover, .swiper-button-prev:hover {
+            transform: scale(1.15);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mx-auto p-4 sm:p-8">
+        <header class="text-center mb-12">
+            <img src="./img/Dark blue.png" alt="Logo EBANX" class="header-logo mb-4">
+            <h1 class="text-4xl md:text-5xl font-bold title-color tracking-wide">Levantamento Landscape Atual</h1>
+            <p class="text-lg text-gray-600 mt-3">Visão geral da infraestrutura SAP</p>
+        </header>
+
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <section class="w-full max-w-7xl mx-auto">
+                        <h2 class="text-3xl font-bold title-color mb-8 border-b-2 border-blue-500/20 pb-3 text-center">Aplicação: S4HANA 2020</h2>
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">DS4 (Desenvolvimento)</h3>
+                                <div class="info-grid">
+                                    <div class="info-row"><span class="info-label"><span class="icon">⚙️</span>Processador</span><span class="info-value">AMD EPYC 7R13, 8 Threads</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🧠</span>Memória</span><span class="info-value">32 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">💻</span>SO</span><span class="info-value">SUSE Linux Ent. Server 15 SP5</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🌐</span>Host</span><span class="info-value">vhebhds4ci</span></div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">QS4 (Qualidade)</h3>
+                                <div class="info-grid">
+                                    <div class="info-row"><span class="info-label"><span class="icon">⚙️</span>Processador</span><span class="info-value">AMD EPYC 7R13, 16 Threads</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🧠</span>Memória</span><span class="info-value">64 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">💻</span>SO</span><span class="info-value">SUSE Linux Ent. Server 15 SP5</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🌐</span>Host</span><span class="info-value">vhebhqs4ci</span></div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">PS4 (Produção)</h3>
+                                <div class="info-grid">
+                                    <div class="info-row"><span class="info-label"><span class="icon">⚙️</span>Processador</span><span class="info-value">AMD EPYC 7R13, 16 Threads</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🧠</span>Memória</span><span class="info-value">64 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">💻</span>SO</span><span class="info-value">SUSE Linux Ent. Server 15 SP5</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🌐</span>Host</span><span class="info-value">vhebhps4ci</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="swiper-slide">
+                    <section class="w-full max-w-7xl mx-auto">
+                        <h2 class="text-3xl font-bold title-color mb-8 border-b-2 border-blue-500/20 pb-3 text-center">Banco de Dados: Hana 2.0</h2>
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">DB DS4</h3>
+                                <div class="info-grid">
+                                    <div class="info-row"><span class="info-label"><span class="icon">💾</span>Memória</span><span class="info-value">256 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">💽</span>Data</span><span class="info-value">213 / 690 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">📜</span>Log</span><span class="info-value">35 / 614 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🌐</span>Host</span><span class="info-value">vhebhhd4db01</span></div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">DB QS4</h3>
+                                <div class="info-grid">
+                                    <div class="info-row"><span class="info-label"><span class="icon">💾</span>Memória</span><span class="info-value">256 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">💽</span>Data</span><span class="info-value">201 / 690 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">📜</span>Log</span><span class="info-value">61 / 614 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🌐</span>Host</span><span class="info-value">vhebhhq4db01</span></div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">DB PS4</h3>
+                                <div class="info-grid">
+                                    <div class="info-row"><span class="info-label"><span class="icon">💾</span>Memória</span><span class="info-value">256 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">💽</span>Data</span><span class="info-value">225 / 690 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">📜</span>Log</span><span class="info-value">36 / 614 GB</span></div>
+                                    <div class="info-row"><span class="info-label"><span class="icon">🌐</span>Host</span><span class="info-value">vhebhhp4db01</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="swiper-slide">
+                     <section class="w-full max-w-7xl mx-auto flex flex-col h-full">
+                        <h2 class="text-3xl font-bold title-color mb-8 border-b-2 border-blue-500/20 pb-3 text-center">Rota de Transporte</h2>
+                        <div class="overflow-x-auto pb-4 flex-grow flex items-center justify-center">
+                            <div class="flex items-center justify-center p-4 min-w-max">
+                                <div class="diagram-box"><strong class="text-xl">DS4</strong><p style="color: var(--accent-teal);" class="text-sm font-normal mt-1">ZDS4</p></div>
+                                
+                                <div class="diagram-arrow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>
+                                    <p>Transport SAP</p>
+                                </div>
+
+                                <div class="diagram-box" style="border-color: var(--primary-blue); border-style: dashed;"><strong class="text-xl">/QAS/</strong><p class="text-sm font-normal mt-1">QAS Transport</p></div>
+                                
+                                <div class="diagram-arrow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>
+                                    <p>100</p>
+                                </div>
+
+                                <div class="diagram-box"><strong class="text-xl">QS4</strong><p style="color: var(--accent-teal);" class="text-sm font-normal mt-1">100 → 100</p></div>
+
+                                <div class="diagram-arrow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>
+                                    <p>Delivery</p>
+                                </div>
+
+                                <div class="diagram-box"><strong class="text-xl">PS4</strong></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="swiper-slide">
+                    <section class="w-full max-w-5xl mx-auto">
+                        <h2 class="text-3xl font-bold title-color mb-8 border-b-2 border-blue-500/20 pb-3 text-center">Componentes Adicionais</h2>
+                        <div class="grid md:grid-cols-2 gap-8">
+                             <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">Webdispatcher - Rise</h3>
+                                <div class="info-grid space-y-2">
+                                    <div class="info-row status-item"><div class="flex items-center gap-3"><span class="status-dot status-green"></span><span>WS4 (Prod)</span></div><span class="info-value">v7.89 - vhebhws4wd01</span></div>
+                                    <div class="info-row status-item"><div class="flex items-center gap-3"><span class="status-dot status-green"></span><span>WS3 (Prod)</span></div><span class="info-value">v7.89 - vhebhws3wd01</span></div>
+                                    <div class="info-row status-item"><div class="flex items-center gap-3"><span class="status-dot status-yellow"></span><span>WS1 (Dev)</span></div><span class="info-value">v7.89 - vhebhws1wd01</span></div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h3 class="text-2xl font-bold mb-6 text-center">Cloud Connector - Rise</h3>
+                                 <div class="info-grid space-y-2">
+                                    <div class="info-row status-item"><div class="flex items-center gap-3"><span class="status-dot status-green"></span><span>PCL (Prod)</span></div><span class="info-value">v2.15.1 - vhebhpclcc01</span></div>
+                                    <div class="info-row status-item"><div class="flex items-center gap-3"><span class="status-dot status-blue"></span><span>PCL (Shadow)</span></div><span class="info-value">v2.15.1 - vhebhpclcc02</span></div>
+                                    <div class="info-row status-item"><div class="flex items-center gap-3"><span class="status-dot status-yellow"></span><span>DCL (Dev)</span></div><span class="info-value">v2.15.1 - vhebhdclcc01</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            autoHeight: true, // Ajusta a altura do carrossel para o slide atual
+            grabCursor: true,
+        });
+    </script>
+</body>
+</html>
