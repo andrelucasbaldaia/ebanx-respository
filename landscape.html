@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebanx - Apresentação Executiva de Landscape</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@700&display=swap');
+
+        :root {
+            --c-bg: #000e2b;
+            --c-primary: #0051ff;
+            --c-secondary: #4BDBBA;
+            --c-text-light: #f2f2f2;
+            --c-text-dark: #000e2b;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: var(--c-bg);
+            color: var(--c-text-light);
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        .slide {
+            flex: 0 0 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5vh 5vw;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- SLIDE STYLES --- */
+
+        /* Cover Slide */
+        .slide-cover {
+            text-align: center;
+        }
+        .cover-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            color: var(--c-secondary);
+            margin-bottom: 2rem;
+        }
+        .cover-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--c-text-light);
+            margin: 0;
+            line-height: 1.2;
+        }
+        .cover-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--c-text-light);
+            margin: 1rem 0 0;
+            border-top: 2px solid var(--c-secondary);
+            display: inline-block;
+            padding-top: 1rem;
+        }
+
+        /* Content Slide */
+        .slide-content {
+            background-color: var(--c-text-light);
+            color: var(--c-text-dark);
+            justify-content: flex-start;
+        }
+
+        .slide-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            color: var(--c-primary);
+            width: 100%;
+            text-align: center;
+            margin-top: 5vh;
+            margin-bottom: 8vh;
+        }
+        .slide-title i {
+            margin-right: 15px;
+            color: var(--c-secondary);
+        }
+
+        .content-split {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        .content-section {
+            width: 45%;
+            text-align: center;
+        }
+        .content-section h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            color: var(--c-text-dark);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .content-section h3 i {
+            font-size: 1.8rem;
+            color: var(--c-primary);
+            margin-right: 15px;
+        }
+
+        .key-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .metric {
+            background-color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--c-primary);
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .info-list li {
+            margin-bottom: 0.5rem;
+        }
+        .info-list span {
+            font-weight: 700;
+        }
+        
+        /* Architecture Slide */
+        .architecture-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 4rem;
+        }
+        .flow-box {
+            font-family: 'Montserrat', sans-serif;
+            background: #fff;
+            color: var(--c-primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .flow-arrow {
+            font-size: 2.5rem;
+            color: var(--c-secondary);
+            margin: 0 2rem;
+        }
+        .components-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .component-box {
+            text-align: center;
+        }
+        .component-box i {
+            font-size: 3rem;
+            color: var(--c-primary);
+            margin-bottom: 1rem;
+        }
+        .component-box h4 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        .component-box p {
+            margin: 0.2rem 0 0;
+            color: #555;
+        }
+        
+        /* Final Slide */
+        .slide-final {
+            background: var(--c-primary);
+        }
+        .final-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 5rem;
+            color: var(--c-text-light);
+        }
+
+        /* --- NAVIGATION --- */
+        .carousel-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+        .nav-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background: var(--c-secondary);
+            color: var(--c-text-dark);
+            border-color: var(--c-secondary);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="carousel-container">
+        <div class="carousel-track">
+
+            <!-- Slide 1: Cover -->
+            <div class="slide slide-cover active">
+                <div class="cover-logo">EBANX</div>
+                <h1 class="cover-title">Análise de Landscape</h1>
+                <p class="cover-subtitle">Relatório Executivo de Ambientes SAP</p>
+            </div>
+
+            <!-- Slide 2: Production -->
+            <div class="slide slide-content">
+                <h1 class="slide-title"><i class="fas fa-rocket"></i>Ambiente de Produção (PS4)</h1>
+                <div class="content-split">
+                    <div class="content-section">
+                        <h3><i class="fas fa-server"></i>Aplicação</h3>
+                        <div class="key-metrics">
+                            <div class="metric"><div class="metric-value">64<small>GB</small></div><div class="metric-label">Memória</div></div>
+                            <div class="metric"><div class="metric-value">16</div><div class="metric-label">Threads</div></div>
+                        </div>
+                        <ul class="info-list">
+                            <li><span>Host:</span> vhebhps4ci</li>
+                            <li><span>OS:</span> SUSE Linux Ent. Server 15 SP5</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h3><i class="fas fa-database"></i>Banco de Dados</h3>
+                        <div class="key-metrics">
+                            <div class="metric"><div class="metric-value">256<small>GB</small></div><div class="metric-label">Memória</div></div>
+                            <div class="metric"><div class="metric-value">225<small>GB</small></div><div class="metric-label">Uso de Disco</div></div>
+                        </div>
+                        <ul class="info-list">
+                            <li><span>Host:</span> vhebhhp4db01</li>
+                            <li><span>Tecnologia:</span> HANA 2.0</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Quality -->
+            <div class="slide slide-content">
+                <h1 class="slide-title"><i class="fas fa-flask-vial"></i>Ambiente de Qualidade (QS4)</h1>
+                <div class="content-split">
+                    <div class="content-section">
+                        <h3><i class="fas fa-server"></i>Aplicação</h3>
+                        <div class="key-metrics">
+                            <div class="metric"><div class="metric-value">64<small>GB</small></div><div class="metric-label">Memória</div></div>
+                            <div class="metric"><div class="metric-value">16</div><div class="metric-label">Threads</div></div>
+                        </div>
+                        <ul class="info-list">
+                            <li><span>Host:</span> vhebhqs4ci</li>
+                            <li><span>OS:</span> SUSE Linux Ent. Server 15 SP5</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h3><i class="fas fa-database"></i>Banco de Dados</h3>
+                        <div class="key-metrics">
+                            <div class="metric"><div class="metric-value">256<small>GB</small></div><div class="metric-label">Memória</div></div>
+                            <div class="metric"><div class="metric-value">201<small>GB</small></div><div class="metric-label">Uso de Disco</div></div>
+                        </div>
+                        <ul class="info-list">
+                            <li><span>Host:</span> vhebhhq4db01</li>
+                            <li><span>Tecnologia:</span> HANA 2.0</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 4: Development -->
+            <div class="slide slide-content">
+                <h1 class="slide-title"><i class="fas fa-code"></i>Ambiente de Desenvolvimento (DS4)</h1>
+                <div class="content-split">
+                    <div class="content-section">
+                        <h3><i class="fas fa-server"></i>Aplicação</h3>
+                        <div class="key-metrics">
+                            <div class="metric"><div class="metric-value">32<small>GB</small></div><div class="metric-label">Memória</div></div>
+                            <div class="metric"><div class="metric-value">8</div><div class="metric-label">Threads</div></div>
+                        </div>
+                        <ul class="info-list">
+                            <li><span>Host:</span> vhebhds4ci</li>
+                            <li><span>OS:</span> SUSE Linux Ent. Server 15 SP5</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h3><i class="fas fa-database"></i>Banco de Dados</h3>
+                        <div class="key-metrics">
+                            <div class="metric"><div class="metric-value">256<small>GB</small></div><div class="metric-label">Memória</div></div>
+                            <div class="metric"><div class="metric-value">213<small>GB</small></div><div class="metric-label">Uso de Disco</div></div>
+                        </div>
+                        <ul class="info-list">
+                            <li><span>Host:</span> vhebhhd4db01</li>
+                            <li><span>Tecnologia:</span> HANA 2.0</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Architecture -->
+            <div class="slide slide-content">
+                <h1 class="slide-title"><i class="fas fa-sitemap"></i>Arquitetura e Componentes</h1>
+                <div class="architecture-flow">
+                    <div class="flow-box">DS4</div>
+                    <div class="flow-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    <div class="flow-box">QS4</div>
+                    <div class="flow-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    <div class="flow-box">PS4</div>
+                </div>
+                <div class="components-grid">
+                    <div class="component-box">
+                        <i class="fas fa-network-wired"></i>
+                        <h4>Webdispatcher</h4>
+                        <p>Versão 7.89</p>
+                    </div>
+                     <div class="component-box">
+                        <i class="fas fa-cloud"></i>
+                        <h4>Cloud Connector</h4>
+                        <p>Versão 2.15.1</p>
+                    </div>
+                    <div class="component-box">
+                        <i class="fab fa-foursquare"></i>
+                        <h4>S/4HANA Foundation</h4>
+                        <p>Release 2020</p>
+                    </div>
+                    <div class="component-box">
+                        <i class="fas fa-palette"></i>
+                        <h4>Fiori FES</h4>
+                        <p>Release 2020</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Final -->
+            <div class="slide slide-final">
+                <h1 class="final-text">Obrigado.</h1>
+            </div>
+        </div>
+
+        <div class="carousel-nav">
+            <button class="nav-button" id="prevBtn"><i class="fas fa-arrow-left"></i></button>
+            <button class="nav-button" id="nextBtn"><i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.querySelector('.carousel-track');
+            const slides = Array.from(track.children);
+            const nextButton = document.getElementById('nextBtn');
+            const prevButton = document.getElementById('prevBtn');
+            let currentIndex = 0;
+
+            const updateSlides = () => {
+                const slideWidth = slides[0].clientWidth;
+                track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+                slides.forEach((slide, index) => {
+                    if (index === currentIndex) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+            };
+
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateSlides();
+            });
+
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                updateSlides();
+            });
+
+            window.addEventListener('resize', updateSlides);
+            
+            // Initial setup
+            updateSlides();
+        });
+    </script>
+</body>
+</html>

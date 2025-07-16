@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EBANX - Business App Projects Q2/2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #000e2b;      /* Main background */
+            --primary-blue: #0051ff;   /* Main accent, titles, links */
+            --accent-teal: #4BDBBA;     /* Secondary accent, charts */
+            --text-color: #f2f2f2;      /* Main text */
+            --text-secondary: #a8b2c3; /* Lighter text */
+            --card-bg: #01153a;         /* Card background */
+            --border-color: #022052;    /* Borders */
+            --green: #28a745;
+            --orange: #fd7e14;
+            --purple: #6f42c1;
+            --red: #dc3545;
+            --yellow: #ffc107;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        body.light-theme {
+            --dark-blue: #f2f2f2;
+            --primary-blue: #0051ff;
+            --accent-teal: #4BDBBA;
+            --text-color: #000e2b;
+            --text-secondary: #5a6474;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--dark-blue);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--card-bg);
+            padding: 2rem 1rem;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid var(--border-color);
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .logo {
+            font-weight: 700;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            color: var(--text-color);
+        }
+
+        .sidebar nav {
+            flex-grow: 1;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 1rem;
+            margin-bottom: 0.3rem;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+            font-weight: 400;
+        }
+
+        .sidebar nav ul li a:hover,
+        .sidebar nav ul li a.active {
+            background-color: var(--primary-blue);
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        /* Theme Switcher */
+        .theme-switcher span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: block;
+        }
+        .theme-switcher {
+            margin-top: 0.2rem;
+            padding: 1rem;
+            text-align: center;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--primary-blue);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-blue);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 2rem 4rem;
+        }
+
+        section {
+            padding-top: 5rem;
+            margin-bottom: 4rem;
+            min-height: 95vh;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        section:last-child {
+            border-bottom: none;
+            min-height: auto;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-shadow: 0 0 10px rgba(0, 81, 255, 0.3);
+        }
+        h1 { font-size: 4rem; margin-bottom: 0.5rem; }
+        h2 { font-size: 2.8rem; margin-bottom: 1rem; }
+        h3 { color: var(--text-secondary); font-weight: 400; font-size: 1.5rem; margin-bottom: 2.5rem; max-width: 800px; }
+
+        /* Intro Section */
+        #intro {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100vh;
+            margin-bottom: 0;
+        }
+        #intro h1 { font-size: 6.5rem; }
+        #intro .subtitle { font-size: 2.2rem; color: var(--text-secondary); }
+
+        /* Summary Section */
+        #summary .summary-list {
+            list-style: none;
+            padding-left: 2rem;
+        }
+        #summary .summary-list li {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        #summary .summary-list li::before {
+            content: '✓';
+            color: var(--primary-blue);
+            position: absolute;
+            left: -2.5rem;
+            font-weight: bold;
+        }
+
+        /* Metrics Section */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .metric-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 81, 255, 0.2);
+        }
+
+        .metric-card h4 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+        .metric-card .value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        .metric-card canvas {
+            max-height: 200px;
+            margin: 0 auto;
+        }
+        
+        .metric-card.large-card {
+            grid-column: span 2;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+        .project-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .project-table th, .project-table td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+        .project-table td:nth-child(3) {
+            white-space: normal;
+            min-width: 300px;
+        }
+
+        .project-table thead {
+            background-color: var(--card-bg);
+            transition: background-color 0.3s;
+        }
+        .project-table thead th {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .project-table tbody tr {
+            transition: background-color 0.3s;
+        }
+        .project-table tbody tr:hover {
+            background-color: var(--border-color);
+        }
+
+        .complexity-badge {
+            display: inline-block;
+            padding: 0.3em 0.6em;
+            font-size: 0.9em;
+            font-weight: 600;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            min-width: 25px;
+        }
+        .complexity-P { background-color: var(--green); }
+        .complexity-M { background-color: var(--yellow); color: var(--dark-blue);}
+        .complexity-G { background-color: var(--red); }
+
+        /* Org Chart */
+        .org-chart-container {
+            overflow-x: auto;
+            padding: 1rem 0;
+            width: 100%;
+        }
+        .org-chart { text-align: center; display: inline-block; padding: 1rem; }
+        .org-chart ul { padding-top: 20px; position: relative; transition: all 0.5s; display: flex; justify-content: center; }
+        .org-chart li { text-align: center; list-style-type: none; position: relative; padding: 20px 5px 0 5px; transition: all 0.5s; }
+        .org-chart li::before, .org-chart li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 2px solid var(--primary-blue); width: 50%; height: 20px; }
+        .org-chart li::after { right: auto; left: 50%; border-left: 2px solid var(--primary-blue); }
+        .org-chart li:only-child::after, .org-chart li:only-child::before { display: none; }
+        .org-chart li:only-child { padding-top: 0; }
+        .org-chart li:first-child::before, .org-chart li:last-child::after { border: 0 none; }
+        .org-chart li:last-child::before { border-right: 2px solid var(--primary-blue); border-radius: 0 5px 0 0; }
+        .org-chart li:first-child::after { border-radius: 5px 0 0 0; }
+        .org-chart ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 2px solid var(--primary-blue); width: 0; height: 20px; }
+        
+        .org-chart li .person { 
+            padding: 15px 10px; 
+            text-decoration: none; 
+            background-color: var(--card-bg); 
+            color: var(--text-color); 
+            display: inline-block; 
+            border-radius: 8px; 
+            transition: all 0.3s; 
+            border: 1px solid var(--border-color); 
+            min-width: 140px; 
+        }
+        .org-chart li .person img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 2px solid var(--accent-teal);
+            background-color: var(--text-secondary);
+        }
+        .org-chart li .person .name { font-weight: 600; font-size: 0.9rem;}
+        .org-chart li .person .title { font-size: 0.75em; color: var(--text-secondary); }
+        .org-chart .tree > li > .person { background-color: var(--primary-blue); border-color: var(--accent-teal); color: #fff; }
+        .org-chart .tree.is-hovering .person { opacity: 0.5; }
+        .org-chart .tree.is-hovering .person.is-active,
+        .org-chart .tree.is-hovering .person.is-active-parent,
+        .org-chart .tree.is-hovering .person.is-active-child { opacity: 1; }
+        .org-chart .person.is-active { 
+            transform: scale(1.05); 
+            background: var(--primary-blue); 
+            border-color: var(--accent-teal); 
+            box-shadow: 0 0 20px rgba(0, 81, 255, 0.5); 
+            color: #fff;
+        }
+        
+        /* Events */
+        #events .content { display: flex; align-items: center; gap: 3rem; background-color: var(--card-bg); padding: 3rem; border-radius: 12px; }
+        #events .text-content { flex: 1; }
+        #events .image-content { flex: 1; text-align: right;}
+        #events .image-content img { width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+
+        /* Mobile Nav */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 1rem;
+            z-index: 1001;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hamburger-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .hamburger-btn .line {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-color);
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+        .mobile-header .logo {
+             font-weight: 700;
+             font-size: 1.5rem;
+             color: var(--text-color);
+        }
+        
+        .sidebar.is-open {
+            transform: translateX(0);
+        }
+        .hamburger-btn.is-open .line1 { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger-btn.is-open .line2 { opacity: 0; }
+        .hamburger-btn.is-open .line3 { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content { margin-left: 0; padding: 2rem; }
+            .sidebar { transform: translateX(-100%); }
+            .mobile-header { display: flex; }
+            section { padding-top: 6rem; }
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.2rem; }
+            #intro h1 { font-size: 4rem; }
+            .metric-card.large-card { grid-column: span 1; }
+            #events .content { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="mobile-header">
+        <div class="logo">
+          <img src="./img/Blue.png" style="width: 200px;"></img>
+        </div>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle menu">
+            <div class="line line1"></div>
+            <div class="line line2"></div>
+            <div class="line line3"></div>
+        </button>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <nav>
+                <div class="logo"><img src="./img/Blue.png" style="width: 200px;"></img></div>
+                <ul>
+                    <li><a href="#intro" class="active">Home</a></li>
+                    <li><a href="#summary">Summary</a></li>
+                    <li><a href="#org-chart">Org Chart</a></li>
+                    <li><a href="#metrics">Q2 Metrics</a></li>
+                    <li><a href="#sap-delivered">SAP: Q2 Deliveries</a></li>
+                    <li><a href="#sap-q3">SAP: Carry Over for Q3 Projects</a></li>
+                    <li><a href="#ia-delivered">AI & Automate: Q2 Deliveries</a></li>
+                    <li><a href="#ia-q3">AI & Automate: Carry Over for Q3 Projects</a></li>
+                    <li><a href="#events">Events</a></li>
+                </ul>
+            </nav>
+            <div class="theme-switcher">
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span>Change Theme</span>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section id="intro">
+                <h1 class="main-title reveal">Business App Projects</h1>
+                <p class="subtitle reveal">SAP | Automate & AI</p>
+                <h3 class="reveal" style="font-size: 2rem; color: var(--text-color);">Q2/2025</h3>
+            </section>
+
+            <section id="summary">
+                <h2 class="reveal">Summary</h2>
+                <ul class="summary-list">
+                    <li class="reveal">Q2 performance metrics</li>
+                    <li class="reveal">Delivered SAP and Automate & AI initiatives</li>
+                    <li class="reveal">Projects continued for Q3</li>
+                    <li class="reveal">Finance & GRC team organization chart</li>
+                    <li class="reveal">Highlights and Events</li>
+                </ul>
+            </section>
+
+            <section id="org-chart">
+                <h2 class="reveal">Org Chart: Finance & GRC</h2>
+                <div class="org-chart-container reveal">
+                    <div class="org-chart">
+                        <ul class="tree">
+                            <li>
+                                <div class="person">
+                                    <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=AD" alt="Photo of Alexandre Dinkelmann">
+                                    <div class="name">Alexandre Dinkelmann</div>
+                                    <div class="title">CFO</div>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="person">
+                                            <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=BB" alt="Photo of Bruno Branco">
+                                            <div class="name">Bruno Branco</div>
+                                            <div class="title">Director of Finance</div>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="person">
+                                                    <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=AVN" alt="Photo of Afonso Vilas Novas">
+                                                    <div class="name">Afonso Vilas Novas</div><div class="title">Controll., FP&A, Proc., Recon</div>
+                                                </div>
+                                                <ul>
+                                                    <li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=JS" alt="Photo of Julia Santos"><div class="name">Julia Santos</div><div class="title">Procurement</div></div></li>
+                                                    <li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=DT" alt="Photo of David Tai"><div class="name">David Tai</div><div class="title">Recon & Cost</div></div></li>
+                                                    <li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=JC" alt="Photo of Jose Carlos"><div class="name">Jose Carlos</div><div class="title">FP&A Manager</div></div></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <div class="person">
+                                                    <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=GM" alt="Photo of Guido Muller">
+                                                    <div class="name">Guido Muller</div><div class="title">Financial Controller</div>
+                                                </div>
+                                                <ul>
+                                                    <li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=JA" alt="Photo of Jean Andrade"><div class="name">Jean Andrade</div><div class="title">Accounting Brazil</div></div></li>
+                                                    <li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=LD" alt="Photo of Leonardo Daltschman"><div class="name">Leonardo Daltschman</div><div class="title">Finance Transformation</div></div></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="person">
+                                            <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=MO" alt="Photo of Maira Oltra">
+                                            <div class="name">Maira Oltra</div><div class="title">Director of Tax & Regulatory</div>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="person">
+                                                    <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=BJ" alt="Photo of Bruna Japiassu">
+                                                    <div class="name">Bruna Japiassu</div><div class="title">Tax</div>
+                                                </div>
+                                                <ul><li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=CB" alt="Photo of Camila Bezerra"><div class="name">Camila Bezerra</div><div class="title">Tax Compliance</div></div></li></ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="person">
+                                            <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=F" alt="Photo of Fran">
+                                            <div class="name">Fran</div><div class="title">Director of Treasury</div>
+                                        </div>
+                                        <ul>
+                                            <li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=AS" alt="Photo of Aline Silva"><div class="name">Aline Silva</div><div class="title">Treasury Operations</div></div></li>
+                                            <li>
+                                                <div class="person">
+                                                    <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=CM" alt="Photo of Calvin Matsure">
+                                                    <div class="name">Calvin Matsure</div><div class="title">Treasury Solutions</div>
+                                                </div>
+                                                <ul><li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=LR" alt="Photo of Leonardo Ricken"><div class="name">Leonardo Ricken</div><div class="title">Treasury ALM</div></div></li></ul>
+                                            </li>
+                                            <li>
+                                                <div class="person">
+                                                    <img src="https://placehold.co/100x100/a8b2c3/000e2b?text=BS" alt="Photo of Bruno Soares">
+                                                    <div class="name">Bruno Soares</div><div class="title">Treasury ALM</div>
+                                                </div>
+                                                <ul><li><div class="person"><img src="https://placehold.co/100x100/a8b2c3/000e2b?text=SR" alt="Photo of Sabrina Risalto"><div class="name">Sabrina Risalto</div><div class="title">Treasury ALM</div></div></li></ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="metrics">
+                <h2 class="reveal">SAP Project Finance: Metrics</h2>
+                <h3 class="reveal">"15 projects delivered in Q2 represent 88% execution."</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card reveal"><h4 class="reveal">Q2 Execution</h4><div class="value" data-target="30">0</div></div>
+                    <div class="metric-card reveal"><h4 class="reveal">Expected Go-live</h4><div class="value" data-target="17">0</div></div>
+                    <div class="metric-card reveal"><h4 class="reveal">Completed</h4><div class="value" data-target="15">0</div></div>
+                    <div class="metric-card reveal"><h4 class="reveal">Not Completed</h4><div class="value" data-target="2">0</div></div>
+                    <div class="metric-card large-card reveal"><h4>% Execution</h4><canvas id="executionChart"></canvas></div>
+                    <div class="metric-card reveal"><h4>Category</h4><canvas id="categoryChart"></canvas></div>
+                    <div class="metric-card reveal"><h4>Factory</h4><canvas id="factoryChart"></canvas></div>
+                    <div class="metric-card large-card reveal"><h4>Size (Expected)</h4><canvas id="sizeChart"></canvas></div>
+                    <div class="metric-card large-card reveal"><h4>Areas (Completed)</h4><canvas id="areasChart"></canvas></div>
+                </div>
+            </section>
+
+            <section id="sap-delivered">
+                <h2 class="reveal">SAP Project: Initiatives delivered in Q2</h2>
+                <div class="table-container reveal">
+                    <table class="project-table">
+                        <thead><tr><th>Area</th><th>Project</th><th>Scope</th><th>Go-Live</th><th>Complex.</th></tr></thead>
+                        <tbody>
+                            <tr class="reveal"><td>Accounting</td><td>Parities Improvement</td><td>Include new exchange rates in the program responsible for automatic currency conversion.</td><td>07/03</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Controllership/FP&A</td><td>SAC - FX Gross Profit Adjustment - 2025</td><td>Simplification and improvement of the Gross Profit process in SAC.</td><td>31/03</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>TAX</td><td>Pre-Project - Invoice Portal</td><td>Automate VAT on Service Purchase Orders in SAP through process adjustments.</td><td>24/04</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Procurement / TAX</td><td>New MM LATAM MIR7 Flow</td><td>Replace the manual invoice payment flow via Pipefy with the MIR7 process in SAP.</td><td>28/04</td><td><span class="complexity-badge complexity-M">M</span></td></tr>
+                            <tr class="reveal"><td>Consolidation</td><td>Group Reporting - Discovery</td><td>Modernize the financial consolidation process, ensuring greater accuracy and scalability.</td><td>30/04</td><td><span class="complexity-badge complexity-G">G</span></td></tr>
+                            <tr class="reveal"><td>Controllership/FP&A</td><td>SAC Gross Profit Revision - 2025</td><td>Complete review of the Gross Profit module in SAC.</td><td>05/05</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Procurement</td><td>Improvement in the Current Approval WF</td><td>Improve the manager experience in approving requisitions and purchases.</td><td>14/05</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Business App</td><td>Incident Flow Improvements</td><td>Implemented improvements in the ServiceNow incident flow for a better user experience.</td><td>30/05</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Business App</td><td>SAP Systems and Connections Map</td><td>Creation of an architecture document with the map of SAP systems and connections.</td><td>30/05</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Controllership/FP&A</td><td>Actual Reclassification</td><td>Creation of an application in SAP for cost center and accounting reclassification of OPEX expenses.</td><td>03/06</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>TAX</td><td>REINF</td><td>Roll out the 4000 series events of the EFD-REINF tax obligation for three entities.</td><td>??</td><td><span class="complexity-badge complexity-M">M</span></td></tr>
+                            <tr class="reveal"><td>People</td><td>Blue Bot</td><td>Blue Bot is an AI initiative from the People area aimed at improving the user experience.</td><td>23/06</td><td><span class="complexity-badge complexity-M">M</span></td></tr>
+                            <tr class="reveal"><td>TAX</td><td>Custom Report of Supplier Invoice Documents</td><td>Developed report consolidates data from invoices (MIRO) and associated orders.</td><td>27/06</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Controllership/FP&A</td><td>SAC OPEX - Forecast/planning New Solution S4 (POC)</td><td>Validate via POC the feasibility of carrying out reforecast and planning.</td><td>30/06</td><td><span class="complexity-badge complexity-M">M</span></td></tr>
+                            <tr class="reveal"><td>Controllership/FP&A</td><td>Improvement of Budget Package Owners</td><td>We automated the process of changing the person responsible for budget packages in SAP.</td><td>??</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section id="sap-q3">
+                <h2 class="reveal">SAP Project: Carry Over for Q3</h2>
+                <div class="table-container reveal">
+                    <table class="project-table">
+                        <thead><tr><th>Area</th><th>Project</th><th>Scope</th><th>Replan</th><th>Complex.</th></tr></thead>
+                        <tbody>
+                             <tr class="reveal"><td>Controllership/FP&A</td><td>SAC Connection with Tableau</td><td>Technical solution for integration between SAC Datasphere, GCP, and Tableau for monitoring.</td><td>27/06</td><td><span class="complexity-badge complexity-M">M</span></td></tr>
+                             <tr class="reveal"><td>Treasury</td><td>TRM - Sprint 2, 3, 4</td><td>Implementation of the integrated treasury solution with the Debt and Investment modules.</td><td>30/06</td><td><span class="complexity-badge complexity-G">G</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="ia-delivered">
+                <h2 class="reveal">Automate & AI: Initiatives delivered in Q2</h2>
+                 <div class="table-container reveal">
+                    <table class="project-table">
+                        <thead><tr><th>Area</th><th>Project</th><th>Scope</th><th>Go-Live</th><th>Complex.</th></tr></thead>
+                        <tbody>
+                            <tr class="reveal"><td>Business App</td><td>Work Equipment Agreement Automation</td><td>Best practices document for developing centralized automations on the Power Platform.</td><td>06/05</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Business App</td><td>[COE] Guidelines Document 2025</td><td>Best practices document for developing centralized automations on the Power Platform.</td><td>16/05</td><td><span class="complexity-badge complexity-M">M</span></td></tr>
+                            <tr class="reveal"><td>Legal</td><td>BC Legal</td><td>Create automation to capture information from Central Bank communications.</td><td>29/05</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                            <tr class="reveal"><td>Business App</td><td>EBANX Power Platform Training</td><td>Power Platform training for EBANX presenting the main functionalities.</td><td>04/06</td><td><span class="complexity-badge complexity-M">M</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="ia-q3">
+                <h2 class="reveal">Automate & AI: Carry Over for Q3</h2>
+                <div class="table-container reveal">
+                    <table class="project-table">
+                        <thead><tr><th>Area</th><th>Project</th><th>Scope</th><th>Replan</th><th>Complex.</th></tr></thead>
+                        <tbody>
+                            <tr class="reveal"><td>Banking</td><td>AI PDF Reader for Acquirers Invoices (Peru)</td><td>Since go-live, ~22,5k documents have been processed. ~83 hours optimized monthly.</td><td>05/03</td><td><span class="complexity-badge complexity-G">G</span></td></tr>
+                            <tr class="reveal"><td>Legal</td><td>Official Communications Automation</td><td>Optimization of the process for receiving and handling judicial and administrative official communications.</td><td>19/06</td><td><span class="complexity-badge complexity-P">P</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            
+            <section id="events">
+                <h2 class="reveal">Business App Projects: Events</h2>
+                <div class="content reveal">
+                    <div class="text-content">
+                        <h3>IA SAP for leaders</h3>
+                        <p>An event focused on presenting the new Artificial Intelligence and automation capabilities integrated with SAP to EBANX leadership, demonstrating the potential for process optimization and strategic decision-making.</p>
+                    </div>
+                    <div class="image-content">
+                        <img src="./img/aisap.jpeg" alt="Speaker at the IA SAP for leaders event" style="width: 300px;">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- Theme Switcher ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.body.classList.add(currentTheme);
+            if (currentTheme === 'light-theme') {
+                themeToggle.checked = true;
+            }
+        }
+
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('light-theme');
+                localStorage.setItem('theme', 'light-theme');
+            } else {
+                document.body.classList.remove('light-theme');
+                localStorage.setItem('theme', 'dark-theme');
+            }
+        });
+
+        // --- Mobile Navigation ---
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const navLinks = document.querySelectorAll('.sidebar nav a');
+
+        hamburgerBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('is-open');
+            hamburgerBtn.classList.toggle('is-open');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1200) {
+                    sidebar.classList.remove('is-open');
+                    hamburgerBtn.classList.remove('is-open');
+                }
+            });
+        });
+
+        // --- Animate on Scroll ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- Animate Counters & Charts on Scroll ---
+        const animateCounters = () => {
+            const counters = document.querySelectorAll('.value');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                const updateCount = () => {
+                    const inc = target / 100;
+                    if (count < target) {
+                        count += inc;
+                        counter.innerText = Math.ceil(count);
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        };
+
+        const chartConfigs = {
+            execution: { type: 'doughnut', data: { labels: ['Completed', 'In Progress'], datasets: [{ data: [88.2, 11.8], backgroundColor: ['#28a745', '#fd7e14'], borderColor: 'transparent' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: {color: 'var(--text-secondary)'} } } } },
+            category: { type: 'pie', data: { labels: ['SAP', 'SAC', 'SAP Co...', 'IA'], datasets: [{ data: [9, 4, 1, 1], backgroundColor: ['#0051ff', '#4BDBBA', '#6f42c1', '#fd7e14'], borderColor: 'transparent' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: {color: 'var(--text-secondary)'} } } } },
+            factory: { type: 'pie', data: { labels: ['Internal', 'Numer', 'Delaware', 'Alliance'], datasets: [{ data: [53.3, 26.7, 13.3, 6.7], backgroundColor: ['#0051ff', '#4BDBBA', '#6f42c1', '#fd7e14'], borderColor: 'transparent' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: {color: 'var(--text-secondary)'} } } } },
+            size: { type: 'bar', data: { labels: ['P', 'M', 'G'], datasets: [{ label: 'Count', data: [9, 5, 3], backgroundColor: ['#28a745', '#ffc107', '#dc3545'] }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: 'var(--text-secondary)' } }, y: { ticks: { color: 'var(--text-secondary)' } } } } },
+            areas: { type: 'bar', data: { labels: ['FP&A', 'Tax', 'Business App', 'People', 'Accounting', 'Procurement', 'Consolidation', 'Community'], datasets: [{ label: 'Count', data: [4, 3, 2, 1, 1, 1, 1, 1], backgroundColor: ['#0051ff', '#4BDBBA', '#6f42c1', '#fd7e14', '#dc3545', '#ffc107', '#28a745'] }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: 'var(--text-secondary)' } }, y: { ticks: { color: 'var(--text-secondary)' } } } } }
+        };
+
+        let chartsInitialized = false;
+        const metricsSection = document.getElementById('metrics');
+        const metricsObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !chartsInitialized) {
+                animateCounters();
+                Chart.defaults.color = 'var(--text-secondary)';
+                Chart.defaults.font.family = "'Poppins', sans-serif";
+                Object.keys(chartConfigs).forEach(key => new Chart(document.getElementById(`${key}Chart`), chartConfigs[key]));
+                chartsInitialized = true;
+                metricsObserver.unobserve(metricsSection);
+            }
+        }, { threshold: 0.5 });
+        if (metricsSection) metricsObserver.observe(metricsSection);
+
+        // --- Active Navigation Link on Scroll ---
+        const sections = document.querySelectorAll('main section');
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${entry.target.id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { rootMargin: '-40% 0px -60% 0px' });
+        sections.forEach(section => scrollObserver.observe(section));
+        
+        // --- Org Chart Interactivity ---
+        const orgTree = document.querySelector('.org-chart .tree');
+        const allPersons = document.querySelectorAll('.org-chart .person');
+
+        allPersons.forEach(person => {
+            person.addEventListener('mouseover', (e) => {
+                orgTree.classList.add('is-hovering');
+                const currentPerson = e.currentTarget;
+                currentPerson.classList.add('is-active');
+
+                let parent = currentPerson.closest('ul')?.closest('li')?.querySelector('.person');
+                while(parent) {
+                    parent.classList.add('is-active-parent');
+                    parent = parent.closest('ul')?.closest('li')?.querySelector('.person');
+                }
+
+                const children = currentPerson.closest('li').querySelectorAll('.person');
+                children.forEach(child => child.classList.add('is-active-child'));
+            });
+
+            person.addEventListener('mouseout', () => {
+                orgTree.classList.remove('is-hovering');
+                allPersons.forEach(p => p.classList.remove('is-active', 'is-active-parent', 'is-active-child'));
+            });
+        });
+
+    });
+    </script>
+</body>
+</html>
