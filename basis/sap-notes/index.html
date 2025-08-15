@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Notas SAP com Drill-down</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilo para a barra de rolagem */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .table-container {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .details-row td {
+            border-bottom: 1px solid #e5e7eb; /* Cor da borda do Tailwind (gray-200) */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Notas SAP e Pré-requisitos</h1>
+            <p class="text-gray-600 mb-6">A tabela abaixo agrupa os pré-requisitos para cada nota SAP. Clique em "Ver" para expandir a lista de pré-requisitos.</p>
+
+            <!-- Controles da Tabela -->
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                <input type="text" id="searchInput" placeholder="Buscar por Nota ou Pré-requisito..." class="w-full sm:w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+
+            <!-- Container da Tabela com Rolagem -->
+            <div class="table-container border border-gray-200 rounded-lg">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 sticky top-0 z-10">
+                        <tr>
+                            <th class="p-4 font-semibold text-gray-600 cursor-pointer w-1/2" onclick="sortTable()">
+                                SAP NOTE <span id="sortArrow" class="sort-arrow"></span>
+                            </th>
+                            <th class="p-4 font-semibold text-gray-600 w-1/2">
+                                Pré-requisitos
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="notesTableBody" class="divide-y divide-gray-200">
+                        <!-- Linhas da tabela serão inseridas aqui pelo JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+             <div id="noResults" class="text-center p-8 text-gray-500 hidden">
+                <p class="text-xl">Nenhum resultado encontrado.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const csvData = `SAP NOTE,Pré-requisito
+3552901,Nenhuma
+3552903,3307663
+3556404,Nenhuma
+3561376,Nenhuma
+3563053,Nenhuma
+3569061,3093561
+3569061,3317642
+3571837,Nenhuma
+3605421,3038528
+3605421,3111428
+3605421,3137990
+3605421,3300207
+3605421,3322900
+3605421,3324837
+3605421,3333518
+3605421,3338405
+3605421,3340974
+3605421,3349311
+3605421,3355535
+3605421,3355577
+3605421,3372480
+3605421,3379015
+3605421,3398611
+3605421,3399855
+3605421,3400274`;
+
+        let tableData = [];
+        let sortDirection = 'asc';
+
+        function processData(data) {
+            const lines = data.trim().split('\n').slice(1);
+            const groupedNotes = {};
+            lines.forEach(line => {
+                const [note, prereq] = line.split(',');
+                if (note && prereq) {
+                    const cleanNote = note.trim();
+                    const cleanPrereq = prereq.trim();
+                    if (!groupedNotes[cleanNote]) {
+                        groupedNotes[cleanNote] = [];
+                    }
+                    // Apenas adiciona se não for "Nenhuma"
+                    if (cleanPrereq.toLowerCase() !== 'nenhuma') {
+                        groupedNotes[cleanNote].push(cleanPrereq);
+                    }
+                }
+            });
+            return Object.keys(groupedNotes).map(note => ({
+                sapNote: note,
+                prerequisites: groupedNotes[note]
+            }));
+        }
+
+        function renderTable(dataToRender) {
+            const tableBody = document.getElementById('notesTableBody');
+            const noResultsDiv = document.getElementById('noResults');
+            tableBody.innerHTML = '';
+
+            noResultsDiv.classList.toggle('hidden', dataToRender.length > 0);
+
+            dataToRender.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
+                row.id = `note-row-${item.sapNote}`;
+
+                // Célula da SAP NOTE
+                row.innerHTML = `<td class="p-4">${item.sapNote}</td>`;
+
+                // Célula dos Pré-requisitos
+                const prereqCell = document.createElement('td');
+                prereqCell.className = 'p-4';
+                
+                if (item.prerequisites.length > 0) {
+                    const prereqCount = item.prerequisites.length;
+                    const button = document.createElement('button');
+                    button.innerHTML = `Ver (${prereqCount}) <span class="arrow inline-block transition-transform">▶</span>`;
+                    button.className = 'bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-3 rounded-lg transition';
+                    button.onclick = (event) => {
+                        event.stopPropagation();
+                        togglePrerequisites(item.sapNote, button);
+                    };
+                    prereqCell.appendChild(button);
+                } else {
+                    prereqCell.textContent = 'Nenhuma';
+                }
+                row.appendChild(prereqCell);
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function togglePrerequisites(noteNumber, button) {
+            const mainRow = document.getElementById(`note-row-${noteNumber}`);
+            const detailsRowId = `prereq-details-${noteNumber}`;
+            const existingDetailsRow = document.getElementById(detailsRowId);
+            const arrow = button.querySelector('.arrow');
+
+            if (existingDetailsRow) {
+                // Recolher (Collapse)
+                existingDetailsRow.remove();
+                const prereqCount = tableData.find(i => i.sapNote === noteNumber).prerequisites.length;
+                button.innerHTML = `Ver (${prereqCount}) <span class="arrow inline-block transition-transform">▶</span>`;
+                mainRow.classList.remove('bg-blue-50');
+            } else {
+                // Expandir
+                const item = tableData.find(i => i.sapNote === noteNumber);
+                if (!item) return;
+
+                const detailsRow = document.createElement('tr');
+                detailsRow.id = detailsRowId;
+                detailsRow.className = 'details-row';
+
+                const detailsCell = document.createElement('td');
+                detailsCell.colSpan = 2;
+                detailsCell.className = 'p-4 bg-gray-50';
+
+                const prereqList = item.prerequisites.map(p => `<li class="py-1">${p}</li>`).join('');
+                detailsCell.innerHTML = `
+                    <div class="pl-4">
+                        <h4 class="font-semibold mb-2 text-gray-800">Pré-requisitos para a nota ${noteNumber}:</h4>
+                        <ul class="list-disc list-inside space-y-1 text-gray-600">${prereqList}</ul>
+                    </div>`;
+                
+                detailsRow.appendChild(detailsCell);
+                
+                mainRow.after(detailsRow);
+                button.innerHTML = `Ocultar <span class="arrow inline-block transition-transform rotate-90">▼</span>`;
+                mainRow.classList.add('bg-blue-50');
+            }
+        }
+
+        function sortTable() {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            tableData.sort((a, b) => {
+                const noteA = parseInt(a.sapNote, 10);
+                const noteB = parseInt(b.sapNote, 10);
+                return sortDirection === 'asc' ? noteA - noteB : noteB - noteA;
+            });
+            document.getElementById('sortArrow').textContent = sortDirection === 'asc' ? ' ▲' : ' ▼';
+            renderTable(tableData);
+        }
+
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredData = tableData.filter(item => 
+                item.sapNote.toLowerCase().includes(searchTerm) || 
+                item.prerequisites.some(p => p.toLowerCase().includes(searchTerm))
+            );
+            renderTable(filteredData);
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('keyup', filterTable);
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            tableData = processData(csvData);
+            sortTable();
+        });
+    </script>
+</body>
+</html>
